@@ -11,8 +11,40 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
+var multer= require("multer");
+const {storage} = require('./cloudinary');
+const upload = multer({storage});
 app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true }));
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder=  mbxGeocoding({accessToken : mapBoxToken })
+
+const nodemailer=require('nodemailer');
+
+const transporter=nodemailer.createTransport(
+{
+	service:"hotmail",
+	auth:{
+		user:"node1234561@outlook.com",
+		pass:"@NodeMail123"
+	}
+});
+
+const options={
+	from:"node1234561@outlook.com",
+	to:"reciever2022@outlook.com",
+	subject:"Request Acknowledgement",
+	text:"Your request for adoption is recieved and you will get to know more details in 3-4 days"
+};
+
+const bodyParser = require("body-parser");
+app.use(express.urlencoded());
+app.set('views',path.join(__dirname,'views'));
+app.set('view engine','ejs');
+//Here we are configuring express to use body-parser as middle-ware.
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 
 // Passport Config
 require('./config/passport')(passport);
@@ -20,6 +52,7 @@ require('./config/passport')(passport);
 // DB Config
 const db = require('./config/keys').mongoURI;
 
+const Pet = require('./models/pet');
 // Passport
 app.use(
     session({
@@ -51,6 +84,7 @@ app.use(
 // app.use('/', require('./routes/index.js'));
 // app.use('/users', require('./routes/users.js'));
 
+// app.get('/test',(req,res)=>res.render('test.ejs'))
 const mongoose = require('mongoose');
 const { urlencoded } = require('express');
 mongoose.connect('mongodb://localhost:27017/need17', {useNewUrlParser: true})
@@ -62,34 +96,65 @@ mongoose.connect('mongodb://localhost:27017/need17', {useNewUrlParser: true})
     console.log(err);
 })
 
-app.set('views',path.join(__dirname,'views'));
-app.set('view engine','ejs');
+
 
 app.get('/',(req,res)=>
 res.render("home.ejs"))
 
 app.get('/aboutUs',(req,res)=>
-res.render("home.ejs"))
+res.send(__dirname + '/index.html'))
 
-// app.get('/register',(req,res)=>
-// res.render("register.ejs"))
+//Adopt 
+app.get('/adopt',async(req,res)=> {
+const pet = await Pet.find({})
+res.render('adopt.ejs', {pet})
+})
 
-// app.get('/login',(req,res)=>
-// res.render("login.ejs"))
-
-app.get('/adopt',(req,res)=>
-res.render("adopt.ejs"))
-
+//Add a New
 app.get('/adopt/new',(req,res)=>
-//res.render("adopt.ejs"))
+res.render("newPet.ejs"))
 
-res.send("adopt_new"))
+app.get('/adopt/new/add',async (req, res) => {
+    const newPet = new Pet(req.query);
+    await newPet.save();
+    res.redirect('/adopt');
+})
 
 app.get('/donate',(req,res)=>
 res.render("donate.ejs"))
 
-// app.use('/', require('./routes/index.js'));
-// app.use('/users', require('./routes/users.js'));
+
+app.get('/contact',(req,res)=>
+{
+  
+  transporter.sendMail(options,function(err,info)
+  {
+    if(err) 
+    {
+      console.log(err)
+      return;
+    }
+    console.log("Sent:"+info.response)
+  }) 
+  res.render('home.ejs');
+})
+
+app.get('/adopt/contact',(req,res)=>
+{
+  
+  transporter.sendMail(options,function(err,info)
+  {
+    if(err) 
+    {
+      console.log(err)
+      return;
+    }
+    console.log("Sent:"+info.response)
+  }) 
+  res.render('home.ejs');
+}
+
+)
 
 
 const User = require('./models/User');

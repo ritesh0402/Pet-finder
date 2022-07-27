@@ -55,3 +55,28 @@
 </div>  
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+Use app.use(express.json()); to implement it in recent versions for JSON bodies. For URL encoded bodies (the kind produced by HTTP form POSTs) use app.use(express.urlencoded());
+
+
+
+
+
+ <li class="list-group-item">Submitted By: <%= campground.author.username%></li>
+ 
+ <script>
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    const campground = <%- JSON.stringify(pet) %>
+    //const id = `<%- pet._id %>`
+</script>
+
+
+res.send(pet.location)
+const geoData = await geocoder.forwardGeocode({
+    
+    query: pet,
+    limit: 1
+}).send()
+res.send(geoData)

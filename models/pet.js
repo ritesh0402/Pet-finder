@@ -3,17 +3,35 @@ const Schema = mongoose.Schema;
 // const passportLocalMongoose = require('passport-local-mongoose');
 
 const PetSchema = new Schema({
-    author: {
-        type: String,
-        required: true
+    images: 
+        {
+            type:String
+        }
+    ,
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point']
+        },
+        coordinates: {
+            type: [Number]
+        }
     },
+    
+    /*author: {
+        type: String,
+        // required: true
+    },*/
     age: {
         type: Number
     },
-    breed: {
+    name: {
         type: String
     },
     location: {
+        type: String
+    },
+    description: {
         type: String
     }
 });

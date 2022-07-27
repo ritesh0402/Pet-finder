@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"> 
+  </head>
+<body>
+<%- include('../navbar.ejs') %>
+<br>
+<div class="row">
+  <h1 class="text-center">New Pet</h1>
+  <div class="col-6 offset-3">
+      <form action="/adopt/new/add" method="GET" novalidate class="validated-form" enctype="multipart/form-data">
+          <div class="mb-3">
+              <label class="form-label" for="title">Breed</label>
+              <input class="form-control" type="text" id="title" name="breed" required>
+              <div class="valid-feedback">
+                  Looks Good!
+              </div>
+          </div>
+          <div class="mb-3">
+              <label class="form-label" for="location">Location</label>
+              <input class="form-control" type="text" id="location" name="location" required>
+              <div class="valid-feedback">
+                  Looks Good!
+              </div>
+          </div>
+          <!--<div class="mb-3">
+              <label class="form-label" for="image">Image URL</label>
+              <input class="form-control" type="text" id="image" name="campground[image]" required>
+              <div class="valid-feedback">
+                  Looks Good!
+              </div>
+          </div>-->
+          <div class="mb-3">
+              <label class="form-label" for="price">Age</label>
+              <div class="input-group">
+                  <!-- <span class="input-group-text" id="age-label">$</span> -->
+                  <input type="text" class="form-control" id="age" placeholder="0" name="age" required>
+                      <div class="valid-feedback">
+                          Looks Good!
+                      </div>
+              </div>
+          </div>
+          <div class="mb-3">
+              <label class="form-label" for="description">Description</label>
+              <textarea class="form-control" type="text" id="description" name="description" required></textarea>
+              <div class="valid-feedback">
+                  Looks Good!
+              </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="URL">Image URL</label>
+            <input class="form-control" type="text" id="URL" name="images" required>
+            <div class="valid-feedback">
+                Looks Good!
+            </div>
+        </div>
+          <!-- <div class="mb-3">
+              <label for="image" class="form-label">Add Images</label>
+              <input class="form-control" type="file" id="image" name="image" multiple>
+          </div> -->
+          <br>
+          <div class="mb-3">
+              <button class="btn btn-primary">Add New Pet</button>
+          </div>
+      </form>
+      <a href="/adopt">All Pets</a>
+  </div>
+</div>  
+<br>
+<%- include('../footer.ejs') %> 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+
+
