@@ -9,7 +9,7 @@
 <body>
 <%- include('../navbar.ejs') %>
 <br>
-<div class="row">
+<div class="row mt-md-3 pt-3">
   <h1 class="text-center">New Pet</h1>
   <div class="col-6 offset-3">
       <form action="/adopt/new/add" method="GET" novalidate class="validated-form" enctype="multipart/form-data">
@@ -45,7 +45,7 @@
               </div>
           </div>
           <div class="mb-3">
-              <label class="form-label" for="description">Description</label>
+              <label class="form-label" for="description">Details</label>
               <textarea class="form-control" type="text" id="description" name="description" required></textarea>
               <div class="valid-feedback">
                   Looks Good!
