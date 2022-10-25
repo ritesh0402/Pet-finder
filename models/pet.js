@@ -31,6 +31,9 @@ const PetSchema = new Schema({
     name: {
         type: String
     },
+    breed: {
+        type: String
+    },
     location: {
         type: String
     },

@@ -327,7 +327,8 @@
             </div>
                 <div class="col p-1 ml-5 d-flex flex-column col-md-6  align-self-center">
                     <h3 class="mb-1" style="font-size: x-large;">Location: <%=p.location%> </h3>
-                    <p class="card-text mb-1" style="font-size: large;">Breed : <%=p.name%></p>
+                    <p class="card-text mb-1" style="font-size: large;">Name : <%=p.name%></p>
+                    <p class="card-text mb-1" style="font-size: large;">Breed : <%=p.breed%></p>
                     <p class="card-text mb-1" style="font-size: large;">Age : <%=p.age%></p>
                     <p class="card-text mb-1" style="font-size: large;">Details : <%=p.description%></p>
                     <p class="card-text mb-1" style="font-size: large;">Posted By : <%=p.author.name%></p>
@@ -346,6 +347,11 @@
                       <form action="/contact" method="get">
                       <button class="btn btn-primary" style=" font-size: large; width: 150px; margin-left: 13px; font-weight: 500;" type="submit">Contact</button>
                       <input type='hidden' name='author' value='<%=p.author.email%>' />
+                      </form>  
+
+                      <form action="/delete" method="post">
+                      <button class="btn btn-danger" style=" font-size: large; width: 150px; margin-left: 13px; font-weight: 500;" type="submit">Delete</button>
+                      <input type='hidden' name='unique' value='<%=p._id%>' />
                       </form>  
                     </div>
                 </div>

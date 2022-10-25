@@ -137,8 +137,9 @@ app.post('/adopt/new/add',(upload.single('image')),async (req, res) => {
     console.log(req.user.firstName)
     console.log(req.file.path)
     const temp={
+      name:req.body.name,
       images: req.file.path,
-      name:req.body.breed,
+      breed:req.body.breed,
       age: req.body.age,
       location: req.body.location,
       description: req.body.description ,
@@ -154,6 +155,11 @@ app.post('/adopt/new/add',(upload.single('image')),async (req, res) => {
 app.get('/donate',(req,res)=>
 res.render("donate.ejs"))
 
+//Delete
+app.post('/delete',async (req,res)=>{
+  await Pet.findByIdAndDelete(req.body.unique)
+  res.redirect('/adopt')
+})
 
 //Contact
 app.get('/contact',(req,res)=>

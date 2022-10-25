@@ -14,6 +14,13 @@
   <div class="col-6 offset-3">
       <form action="/adopt/new/add" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
           <div class="mb-3">
+              <label class="form-label" for="title">Name</label>
+              <input class="form-control" type="text" id="title" name="name" required>
+              <div class="valid-feedback">
+                  Looks Good!
+              </div>
+          </div>
+          <div class="mb-3">
               <label class="form-label" for="title">Breed</label>
               <input class="form-control" type="text" id="title" name="breed" required>
               <div class="valid-feedback">
