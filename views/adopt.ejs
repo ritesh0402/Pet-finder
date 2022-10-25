@@ -326,10 +326,11 @@
                       <text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>
             </div>
                 <div class="col p-1 ml-5 d-flex flex-column col-md-6  align-self-center">
-                    <h3 class="mb-1" style="font-size: x-large;">Foster Home : Mumbai </h3>
+                    <h3 class="mb-1" style="font-size: x-large;">Breed: <%=p.name%> </h3>
                     <!-- <div class="mb-1 text-muted" style="font-size: large;">Location : </div> -->
                     <div class="mb-1 text-muted" style="font-size: large;">Age : <%=p.age%></div>
                     <p class="card-text mb-1" style="font-size: large;">Details : <%=p.description%></p>
+                    <p class="card-text mb-1" style="font-size: large;">Posted By : <%=p.author.name%></p>
 
                     <form action="/adopt/contact" method="get">
                       <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -344,8 +345,8 @@
 
                       <form action="/contact" method="get">
                       <button class="btn btn-primary" style=" font-size: large; width: 150px; margin-left: 13px; font-weight: 500;" type="submit">Contact</button>
-                      </form>   
-
+                      <input type='hidden' name='author' value='<%=p.author.email%>' />
+                      </form>  
                     </div>
                 </div>
 

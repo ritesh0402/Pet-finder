@@ -1,17 +1,21 @@
-// const express = require('express');
-// const router = express.Router();
-// const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
+const express=require('express')
+const router=express.Router()
+const {ensureAuth,enseureGuest, ensureGuest} = require('../Auth/middleware/auth')
 
-// // Welcome Page
-// router.get('/', forwardAuthenticated, (req, res) => res.render('welcome'));
+//Login Page
+//Route : Get /
+router.get('/',ensureGuest,(req,res)=>
+{
+  res.render('login')
+})
 
-// // Dashboard
-// router.get('/', ensureAuthenticated, (req, res) =>
-//   res.render('home.ejs', {
-//     user: req.user
-//   })
-// );
+//Home Page
+//Route : Get /home
+router.get('/home',ensureAuth,(req,res)=>
+{
+  res.render('home',{
+    name:req.user.firstName
+  })
+})
 
-// module.exports = router;
-// ///////////////////////////////////////////////////
-
+module.exports=router

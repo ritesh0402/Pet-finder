@@ -1,0 +1,203 @@
+if(process.env.NODE_ENV !== "production"){
+    require('dotenv').config();
+}
+
+const express=require('express');
+const app=express();
+const path=require('path');
+const flash = require('connect-flash');
+const bcrypt = require('bcryptjs');
+const session = require('express-session');
+var multer= require("multer");
+const {storage} = require('./cloudinary/cloud');
+const upload = multer({storage});
+app.use(express.static('public'));
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder=  mbxGeocoding({accessToken : mapBoxToken })
+const MongoStore = require('connect-mongo')
+const passport = require('passport')
+
+
+//Nodemailer
+const nodemailer=require('nodemailer');
+
+const transporter=nodemailer.createTransport(
+{
+	service:"hotmail",
+	auth:{
+		user:"node1234561@outlook.com",
+		pass:"@NodeMail123"
+	}
+});
+
+const options={
+	from:"node1234561@outlook.com",
+	to:"reciever2022@outlook.com",
+	subject:"Request Acknowledgement",
+	text:"Your request for adoption is recieved and you will get to know more details in 3-4 days"
+};
+
+
+
+//Some Setup
+const bodyParser = require("body-parser");
+app.use(express.urlencoded());
+app.set('views',path.join(__dirname,'views'));
+app.set('view engine','ejs');
+
+app.use(bodyParser.urlencoded({
+  extended:true
+}))
+app.use(bodyParser.json());
+
+
+
+// Passport Config
+require('./config/passport')(passport);
+
+//Express Session
+app.use(session({
+  secret: 'harsh',
+  resave: false,
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: "mongodb+srv://harsh:%40Harsh2502@cluster0.pbfqw5x.mongodb.net/test?retryWrites=true&w=majority",
+  })
+}))
+
+//Passport Middleware
+app.use(passport.initialize())
+app.use(passport.session())
+
+
+// DB Config
+const db = require('./config/keys').mongoURI;
+
+const Pet = require('./models/pet');
+// Passport
+app.use(
+    session({
+      secret: 'secret',
+      resave: true,
+      saveUninitialized: true
+    })
+  );
+  
+  // Passport middleware
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
+  // Connect flash
+  app.use(flash());
+  
+  // Global variables
+  app.use(function(req, res, next) {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+  });
+
+  
+//Mpngoose Connection
+const mongoose = require('mongoose');
+const { urlencoded } = require('express');
+mongoose.connect('mongodb+srv://harsh:%40Harsh2502@cluster0.pbfqw5x.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true})
+.then(()=>{
+    console.log("Connection established");
+})
+.catch(err=>{
+    console.log("error");
+    console.log(err);
+})
+
+//Routes
+
+//Home
+app.get('/home',(req,res)=>
+{
+  res.render('home')
+})
+
+//About Us
+app.get('/aboutUs',(req,res)=>res.send(__dirname + '/index.html'))
+
+//Adopt 
+app.get('/adopt',async(req,res)=> {
+const pet = await Pet.find({})
+res.render('adopt.ejs', {pet})
+})
+
+//Add a New
+app.get('/adopt/new',(req,res)=>
+res.render("newPet.ejs"))
+
+app.post('/adopt/new/add',(upload.single('image')),async (req, res) => {
+    console.log(req.user.firstName)
+    console.log(req.file.path)
+    const temp={
+      images: req.file.path,
+      name:req.body.breed,
+      age: req.body.age,
+      location: req.body.location,
+      description: req.body.description ,
+      author:{name:req.user.firstName,email:req.user.email}
+    }
+    const newPet = new Pet(temp);
+    await newPet.save();
+    res.redirect('/adopt');
+})
+
+
+//Donate
+app.get('/donate',(req,res)=>
+res.render("donate.ejs"))
+
+
+//Contact
+app.get('/contact',(req,res)=>
+{ 
+  console.log(req.query)
+  res.redirect(`https://mail.google.com/mail/?view=cm&fs=1&to=${req.query.author}`)
+})
+
+app.get('/adopt/contact',(req,res)=>
+{
+  
+  transporter.sendMail(options,function(err,info)
+  {
+    if(err) 
+    {
+      console.log(err)
+      return;
+    }
+    console.log("Sent:"+info.response)
+  }) 
+  res.render('home.ejs');
+}
+
+)
+
+
+app.use('/',require('./routes/index'))
+app.use('/auth',require('./routes/auth'))
+
+app.listen(3000,()=>console.log("Server Up and Running"));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

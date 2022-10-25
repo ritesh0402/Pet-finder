@@ -17,11 +17,14 @@ const PetSchema = new Schema({
             type: [Number]
         }
     },
-    
-    /*author: {
-        type: String,
-        // required: true
-    },*/
+    author: {
+        name:{
+            type:String
+        },
+        email:{
+            type:String
+        } 
+    },
     age: {
         type: Number
     },

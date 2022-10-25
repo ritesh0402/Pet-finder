@@ -12,7 +12,7 @@
 <div class="row mt-md-3 pt-3">
   <h1 class="text-center">New Pet</h1>
   <div class="col-6 offset-3">
-      <form action="/adopt/new/add" method="GET" novalidate class="validated-form" enctype="multipart/form-data">
+      <form action="/adopt/new/add" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
           <div class="mb-3">
               <label class="form-label" for="title">Breed</label>
               <input class="form-control" type="text" id="title" name="breed" required>
@@ -27,13 +27,7 @@
                   Looks Good!
               </div>
           </div>
-          <!--<div class="mb-3">
-              <label class="form-label" for="image">Image URL</label>
-              <input class="form-control" type="text" id="image" name="campground[image]" required>
-              <div class="valid-feedback">
-                  Looks Good!
-              </div>
-          </div>-->
+
           <div class="mb-3">
               <label class="form-label" for="price">Age</label>
               <div class="input-group">
@@ -52,16 +46,12 @@
               </div>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="URL">Image URL</label>
-            <input class="form-control" type="text" id="URL" name="images" required>
+            <label class="form-label" for="URL">Add Image</label>
+            <input type="file" name="image" id="">
             <div class="valid-feedback">
                 Looks Good!
             </div>
         </div>
-          <!-- <div class="mb-3">
-              <label for="image" class="form-label">Add Images</label>
-              <input class="form-control" type="file" id="image" name="image" multiple>
-          </div> -->
           <br>
           <div class="mb-3">
               <button class="btn btn-primary">Add New Pet</button>
