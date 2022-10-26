@@ -126,15 +126,17 @@ app.get('/aboutUs',(req,res)=>res.send(__dirname + '/index.html'))
 //Adopt 
 app.get('/adopt',async(req,res)=> {
 const pet = await Pet.find({})
-res.render('adopt.ejs', {pet})
+res.render('adopt.ejs', {pet,user:req.user.email})
 })
 
 //Add a New
-app.get('/adopt/new',(req,res)=>
-res.render("newPet.ejs"))
+app.get('/adopt/new',(req,res)=>{
+  console.log(req.user)
+  res.render("newPet.ejs")
+}
+)
 
 app.post('/adopt/new/add',(upload.single('image')),async (req, res) => {
-    console.log(req.user.firstName)
     console.log(req.file.path)
     const temp={
       name:req.body.name,
