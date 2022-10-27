@@ -18,25 +18,8 @@ const geocoder=  mbxGeocoding({accessToken : mapBoxToken })
 const MongoStore = require('connect-mongo')
 const passport = require('passport')
 
+const {ensureAuth, ensureGuest} = require('./auth')
 
-//Nodemailer
-const nodemailer=require('nodemailer');
-
-const transporter=nodemailer.createTransport(
-{
-	service:"hotmail",
-	auth:{
-		user:"node1234561@outlook.com",
-		pass:"@NodeMail123"
-	}
-});
-
-const options={
-	from:"node1234561@outlook.com",
-	to:"reciever2022@outlook.com",
-	subject:"Request Acknowledgement",
-	text:"Your request for adoption is recieved and you will get to know more details in 3-4 days"
-};
 
 
 
@@ -121,21 +104,22 @@ app.get('/home',(req,res)=>
 })
 
 //About Us
-app.get('/aboutUs',(req,res)=>res.send(__dirname + '/index.html'))
+app.get('/aboutUs',ensureAuth,(req,res)=>res.send(__dirname + '/index.html'))
 
 //Adopt 
-app.get('/adopt',async(req,res)=> {
+app.get('/adopt',ensureAuth,async(req,res)=> {
 const pet = await Pet.find({})
 res.render('adopt.ejs', {pet,user:req.user.email})
 })
 
 //Add a New
-app.get('/adopt/new',(req,res)=>{
+app.get('/adopt/new',ensureAuth,(req,res)=>{
   console.log(req.user)
   res.render("newPet.ejs")
 }
 )
 
+//Add a New Pet Actual Request
 app.post('/adopt/new/add',(upload.single('image')),async (req, res) => {
     console.log(req.file.path)
     const temp={
@@ -154,8 +138,7 @@ app.post('/adopt/new/add',(upload.single('image')),async (req, res) => {
 
 
 //Donate
-app.get('/donate',(req,res)=>
-res.render("donate.ejs"))
+app.use('/payment',ensureAuth,require('./routes/paytm'))
 
 //Delete
 app.post('/delete',async (req,res)=>{
@@ -164,15 +147,40 @@ app.post('/delete',async (req,res)=>{
 })
 
 //Contact
-app.get('/contact',(req,res)=>
+app.get('/contact',ensureAuth,(req,res)=>
 { 
-  console.log(req.query)
   res.redirect(`https://mail.google.com/mail/?view=cm&fs=1&to=${req.query.author}`)
 })
 
-app.get('/adopt/contact',(req,res)=>
+//Contact in Adoption Page
+app.post('/adopt/contact',ensureAuth,(req,res)=>
 {
   
+  //Nodemailer
+  const {name,breed,age,location}=req.body
+  const nodemailer=require('nodemailer');
+
+  const transporter=nodemailer.createTransport(
+  {
+    service:"hotmail",
+    auth:{
+      user:"node1234561@outlook.com",
+      pass:"@NodeMail123"
+    }
+  });
+
+  const options={
+    from:"node1234561@outlook.com",
+    to:`${req.user.email}`,
+    subject:"Request Acknowledgement",
+    text:`Your request for adoption of is recieved and you will get to know more details in 3-4 days\n
+    \nLocation: ${location},
+    \nName: ${name},
+    \nBreed: ${breed},
+    \nAge: ${age}
+    `
+  };
+
   transporter.sendMail(options,function(err,info)
   {
     if(err) 
@@ -182,14 +190,27 @@ app.get('/adopt/contact',(req,res)=>
     }
     console.log("Sent:"+info.response)
   }) 
-  res.render('home.ejs');
+  res.redirect('/home');
 }
 
 )
 
 
+//Search in Adoption Page
+app.post('/search',ensureAuth,async(req,res)=>{
+  const { location } = req.body;
+  const pet = await Pet.find({"location" : location})
+  res.render('adopt.ejs', {pet,user:req.user.email})
+})
+
+//NGO Page
+app.get('/ngo',(req,res)=>{
+  res.render('ngo')
+})
+
 app.use('/',require('./routes/index'))
 app.use('/auth',require('./routes/auth'))
+
 
 app.listen(3000,()=>console.log("Server Up and Running"));
 

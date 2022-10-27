@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {ensureAuth,enseureGuest, ensureGuest} = require('../Auth/middleware/auth')
+const {ensureAuth, ensureGuest} = require('../auth')
 
 //Login Page
 //Route : Get /
