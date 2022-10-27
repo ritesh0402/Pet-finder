@@ -9,7 +9,7 @@ const config = require("../Paytm/config");
 //GET Payment Page
 //Route : Get /payment
 router.get("/", (req, res) => {
-    res.render('paytm');
+    res.render('paytm',{cost:req.query.cost,name:req.user.firstName,email:req.user.email});
   });
 
 const parseUrl = express.urlencoded({ extended: false });

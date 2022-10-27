@@ -58,6 +58,8 @@ app.use(passport.session())
 const db = require('./config/keys').mongoURI;
 
 const Pet = require('./models/pet');
+const Care = require('./models/care');
+
 // Passport
 app.use(
     session({
@@ -207,6 +209,58 @@ app.post('/search',ensureAuth,async(req,res)=>{
 app.get('/ngo',(req,res)=>{
   res.render('ngo')
 })
+
+//Pet Care
+app.get('/care',async(req,res)=>{
+  const care = await Care.find({})
+  res.render('care.ejs', {care,user:req.user.email})
+})
+
+//Pet Care new
+app.get('/care/new',ensureAuth,(req,res)=>{
+  console.log(req.user)
+  res.render("newCare.ejs")
+})
+
+//Add a New Pet Actual Request
+app.post('/care/new/add',(upload.single('image')),async (req, res) => {
+  console.log(req.file.path)
+  const temp={
+    name:req.body.name,
+    images: req.file.path,
+    service:req.body.service,
+    cost: req.body.cost,
+    location: req.body.location,
+    description: req.body.description ,
+    author:{name:req.user.firstName,email:req.user.email}
+  }
+  const newCare = new Care(temp);
+  await newCare.save();
+  res.redirect('/care');
+})
+
+//Search Care
+app.post('/care/search',ensureAuth,async(req,res)=>{
+  const { location } = req.body;
+  const care = await Care.find({"location" : location})
+  res.render('care.ejs', {care,user:req.user.email})
+})
+
+//Care Contact
+
+app.get('/care/contact',ensureAuth,(req,res)=>
+{ 
+  res.redirect(`https://mail.google.com/mail/?view=cm&fs=1&to=${req.query.author}`)
+})
+
+
+//Delete Care
+app.post('/care/delete',async (req,res)=>{
+  await Care.findByIdAndDelete(req.body.unique)
+  res.redirect('/care')
+})
+
+
 
 app.use('/',require('./routes/index'))
 app.use('/auth',require('./routes/auth'))

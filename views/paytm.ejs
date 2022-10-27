@@ -20,11 +20,11 @@
             <form class="" action="/payment/paynow" method="post">
               <div class="form-group">
                 <label for="">Name: </label>
-                <input class="form-control" type="text" name="name" value="">
+                <input class="form-control" type="text" name="name" value="<%=name%>">
               </div>
               <div class="form-group">
                 <label for="">Email: </label>
-                <input class="form-control" type="text" name="email" value="">
+                <input class="form-control" type="text" name="email" value="<%=email%>">
               </div>
               <div class="form-group">
                 <label for="">Phone: </label>
@@ -32,7 +32,7 @@
               </div>
                 <div class="form-group">
                 <label for="">Amount: </label>
-                <input class="form-control" type="text" name="amount" value="">
+                <input class="form-control" type="text" name="amount" value=<%if(cost){%>"<%=cost%>"<%}%>>
               </div>
               <div class="form-group">
                 <button class="btn form-control btn-primary">Pay Now</button>
