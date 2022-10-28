@@ -15,4 +15,3 @@ const mapper = async site => {
 const result = await pMap(sites, mapper, {concurrency: 2});
 
 console.log(result);
-//=> ['https://sindresorhus.com/', 'https://avajs.dev/', 'https://github.com/']
